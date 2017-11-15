@@ -1,0 +1,69 @@
+#star from 20171115
+bl_info = {
+    "name": "IMDJS_uv_tools",
+    "author": "imdjs",
+    "version": (2017,"1115"),
+    "blender": (2, 7, 9),
+    "api": 279,
+    "location": "IMAGE_EDITOR > UI ",
+    "description": "smooth  or align uvs",
+    "warning": "",
+    "wiki_url": "http://blog.sina.com.cn/u/1325600780",
+    "tracker_url": "http://blog.sina.com.cn/s/blog_4f03100c01010wqb.html",
+    "category": "UV"}
+
+import os,sys,imp
+import bpy, math,  mathutils,bmesh
+from bpy.props import *
+from math import *
+from mathutils import Vector
+
+path目录 = os.path.dirname(__file__) #本py文件所在目录
+文件夹此=os.path.basename(path目录)  #本py文件所在文件夹名
+
+
+from .operator import*
+
+#///////////////////////////////////////////
+def UPDATE1(self, context):
+    if(context.window_manager.bpTransmition==False):
+        context.window_manager.bpVerticalDistance=False;
+
+def UPDATE2(self, context):
+    if(context.window_manager.bpVerticalDistance==True):
+        context.window_manager.bpTransmition=True;
+
+def UPDATE3(self, context):
+    if(context.window_manager.bpXYwm==True):
+        context.window_manager.bpTransmition=True;
+        context.window_manager.bpVerticalDistance=True;
+
+def register():
+    bpy.utils.register_module(__name__)
+    bpy.types.Scene.fpMeshInfulance=FloatProperty(name="fpMeshInfulance", description="this will influence  the uv according to the mesh shape", default=1.0, min=0.0, max=1.0, soft_min=0.0, soft_max=1.0, step=3, precision=2);
+    bpy.types.WindowManager.bpTransmition=BoolProperty(name="transmission", description="transmission", default=False,update=UPDATE1);
+    bpy.types.WindowManager.bpVerticalDistance=BoolProperty(name="vertical", description="vertical Proportion", default=False,update=UPDATE2);
+    bpy.types.WindowManager.bpXYwm=BoolProperty(name="XY Proportion", description="XY Proportion", default=False,update=UPDATE3);
+def unregister():
+    #bpy.ops.deldll.uv('INVOKE_DEFAULT',);
+    del bpy.types.Scene.fpMeshInfulance;
+    del bpy.types.WindowManager.bpTransmition;
+    del bpy.types.WindowManager.bpVerticalDistance;
+    del bpy.types.WindowManager.bpXYwm;
+
+    bpy.utils.unregister_module(__name__);
+
+
+    for s in [文件夹此,文件夹此+'.operator',文件夹此+'.function',文件夹此+'.global_var',文件夹此+'.PYLIB_math',文件夹此+'.PYLIB_math_curve']:
+        try:
+            del sys.modules[s];
+        except:pass;
+
+
+
+if (__name__ == "__main__"):
+    register()
+
+#/////////////////////////////////////////////////
+
+
